@@ -2,8 +2,9 @@
 export const site = {
   name: 'Ansareez',
   description:
-    'Ansareez is a digital agency offering digital marketing, performance advertising, branding and content creation.',
-  email: 'info@linkrypt.com',
+    'Ansareez is a digital agency in Slough offering digital marketing, AI automation and cybersecurity audits.',
+  // PLACEHOLDER: the client's real business email
+  email: 'hello@example.com',
   address: {
     street: '45 Hampshire Avenue',
     town: 'Slough',
