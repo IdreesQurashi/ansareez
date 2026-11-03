@@ -2,9 +2,8 @@
 export const site = {
   name: 'Ansareez',
   description:
-    'Ansareez is a digital agency in Slough offering digital marketing, AI automation and cybersecurity audits.',
-  // PLACEHOLDER: the client's real business email
-  email: 'hello@example.com',
+    'Ansareez is a digital agency offering digital marketing, performance advertising, branding and content creation.',
+  email: 'info@linkrypt.com',
   address: {
     street: '45 Hampshire Avenue',
     town: 'Slough',
@@ -13,16 +12,16 @@ export const site = {
   },
   // Every call to action leads to the contact form.
   ctaLabel: 'Get in touch',
-  ctaUrl: '/#contact',
+  ctaUrl: '#contact',
   // Clients, Results and Gallery only show in the menu once those sections have real content.
   nav: [
-    { label: 'Clients', href: '/#clients' },
-    { label: 'Services', href: '/#services' },
-    { label: 'Where to start', href: '/#start' },
-    { label: 'Process', href: '/#process' },
-    { label: 'Results', href: '/#results' },
-    { label: 'Gallery', href: '/#gallery' },
-    { label: 'FAQ', href: '/#faq' },
+    { label: 'Clients', href: '#clients' },
+    { label: 'Services', href: '#services' },
+    { label: 'Where to start', href: '#start' },
+    { label: 'Process', href: '#process' },
+    { label: 'Results', href: '#results' },
+    { label: 'Gallery', href: '#gallery' },
+    { label: 'FAQ', href: '#faq' },
   ],
   // PLACEHOLDER: the client's real profile links. Links left as '#' are not sent to search engines.
   socials: [

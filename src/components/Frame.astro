@@ -45,6 +45,18 @@ const tones: Record<Tone, string> = {
 };
 
 const isReel = shape === 'reel';
+
+const rawVideo = video
+  ? video.startsWith('http') || video.startsWith('//')
+    ? video
+    : `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${video.replace(/^\//, '')}`
+  : undefined;
+
+const rawPoster = poster
+  ? poster.startsWith('http') || poster.startsWith('//')
+    ? poster
+    : `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${poster.replace(/^\//, '')}`
+  : undefined;
 ---
 
 <figure
@@ -73,12 +85,12 @@ const isReel = shape === 'reel';
           loop
           playsinline
           preload="none"
-          poster={poster}
+          poster={rawPoster}
           disablepictureinpicture
           aria-hidden="true"
           data-reel-video
         >
-          <source src={video} type="video/mp4" />
+          <source src={rawVideo} type="video/mp4" />
         </video>
         <div
           class="pointer-events-none absolute inset-0"

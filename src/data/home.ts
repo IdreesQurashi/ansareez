@@ -9,16 +9,16 @@ export type Tone = 'white' | 'ink' | 'night' | 'deep' | 'violet' | 'teal' | 'sky
 export type ServiceKey = 'marketing' | 'automation' | 'security';
 
 export const serviceNames: Record<ServiceKey, string> = {
-  marketing: 'Digital marketing',
-  automation: 'AI automation',
-  security: 'Cybersecurity audits',
+  marketing: 'Performance advertising',
+  automation: 'Brand and creative studio',
+  security: 'Analytics and growth',
 };
 
-/** The short names on the service map cards (Idrees, 26 Oct 2026) */
+/** The short names on the service map cards */
 export const serviceVerbs: Record<ServiceKey, { verb: string; label: string }> = {
-  marketing: { verb: 'Grow', label: 'Marketing' },
-  automation: { verb: 'Automate', label: 'AI adoption' },
-  security: { verb: 'Protect', label: 'Cybersecurity audits' },
+  marketing: { verb: 'Reach', label: 'Paid ads' },
+  automation: { verb: 'Create', label: 'Brand and content' },
+  security: { verb: 'Scale', label: 'Audience analytics' },
 };
 
 export interface Reel {
@@ -30,21 +30,21 @@ export interface Reel {
 }
 
 export const hero = {
-  headline: 'Grow, automate and protect your business.',
-  lead: 'Ansareez helps businesses win more customers online, save hours with AI automation, and find security gaps before attackers do.',
+  headline: 'Elevate your brand and scale your reach.',
+  lead: 'Ansareez helps businesses win high intent customers through targeted advertising, distinctive brand design and high converting video content.',
   secondary: 'See our services',
   // The client's three short videos (28 Oct 2026), compressed to 540 x 960 in public/videos.
   // Each column shows all three in a different order, so the same clip never sits side by side.
   feed: {
     up: [
-      { topic: 'Marketing', title: 'Strategy sessions', tone: 'ink', video: '/videos/reel-strategy.mp4', poster: '/videos/reel-strategy.webp' },
-      { topic: 'Cybersecurity', title: 'Security audits', tone: 'night', video: '/videos/reel-security.mp4', poster: '/videos/reel-security.webp' },
-      { topic: 'AI adoption', title: 'AI and automation', tone: 'white', video: '/videos/reel-ai.mp4', poster: '/videos/reel-ai.webp' },
+      { topic: 'Paid Ads', title: 'Meta and Google campaigns', tone: 'ink', video: '/videos/reel-strategy.mp4', poster: '/videos/reel-strategy.webp' },
+      { topic: 'Creative', title: 'Content and storytelling', tone: 'night', video: '/videos/reel-security.mp4', poster: '/videos/reel-security.webp' },
+      { topic: 'Growth', title: 'Audience analytics', tone: 'white', video: '/videos/reel-ai.mp4', poster: '/videos/reel-ai.webp' },
     ] satisfies Reel[],
     down: [
-      { topic: 'AI adoption', title: 'AI and automation', tone: 'white', video: '/videos/reel-ai.mp4', poster: '/videos/reel-ai.webp' },
-      { topic: 'Marketing', title: 'Strategy sessions', tone: 'ink', video: '/videos/reel-strategy.mp4', poster: '/videos/reel-strategy.webp' },
-      { topic: 'Cybersecurity', title: 'Security audits', tone: 'night', video: '/videos/reel-security.mp4', poster: '/videos/reel-security.webp' },
+      { topic: 'Growth', title: 'Audience analytics', tone: 'white', video: '/videos/reel-ai.mp4', poster: '/videos/reel-ai.webp' },
+      { topic: 'Paid Ads', title: 'Meta and Google campaigns', tone: 'ink', video: '/videos/reel-strategy.mp4', poster: '/videos/reel-strategy.webp' },
+      { topic: 'Creative', title: 'Content and storytelling', tone: 'night', video: '/videos/reel-security.mp4', poster: '/videos/reel-security.webp' },
     ] satisfies Reel[],
   },
 };
@@ -68,7 +68,7 @@ export const services = {
       key: 'marketing',
       tagline: 'Get found by the right customers.',
       body: 'We pick the channels that suit your goals, then run targeted campaigns using custom audiences and data, with content made for your brand rather than borrowed from a template.',
-      // From the team's earlier company profile (27 Oct 2026)
+      // From the team's earlier company profile
       includes: [
         'Meta ads on Facebook and Instagram',
         'Google Ads and YouTube ads',
@@ -79,38 +79,44 @@ export const services = {
     },
     {
       key: 'automation',
-      tagline: 'Hand the repetitive work to software.',
-      body: 'We find the tasks that eat up your team’s time and automate them with AI, from answering enquiries to processing documents and updating your systems.',
-      // DRAFT: client to confirm
-      includes: ['A review of how work flows today', 'AI assistants for enquiries and support', 'Automations between the tools you already use', 'Training for your team'],
-      cta: 'Talk to us about AI',
+      tagline: 'Make your brand recognizable and memorable.',
+      body: 'From video storytelling to bespoke visual identity, our creative team crafts on brand assets that capture attention and build lasting customer loyalty.',
+      includes: [
+        'Brand identity, logos and typography',
+        'Social media content creation',
+        'Video production and editing',
+        'Marketing collateral and creative direction',
+      ],
+      cta: 'Talk to us about creative',
     },
     {
       key: 'security',
-      tagline: 'Find the gaps before someone else does.',
-      body: 'We check your website, systems and everyday practices for weaknesses, then give you a clear report and a plan to fix them in order of risk.',
-      // DRAFT: client to confirm
-      includes: ['Website and system vulnerability checks', 'Email and account security review', 'Staff phishing awareness', 'A written report with priorities'],
-      cta: 'Talk to us about an audit',
+      tagline: 'Turn attention into measurable sales.',
+      body: 'We track multi channel performance, analyze conversion funnels, and provide weekly reports so every campaign produces real return on investment.',
+      includes: [
+        'Conversion rate optimization',
+        'Custom audience and demographic targeting',
+        'Weekly performance reports and reviews',
+        'Multi channel tracking and analytics',
+      ],
+      cta: 'Talk to us about growth',
     },
   ] satisfies { key: ServiceKey; tagline: string; body: string; includes: string[]; cta: string }[],
 };
 
-// The self check: three yes or no questions, one per service, shown one at a time. An answer
-// that shows a need flags that service; the first flagged one is the suggestion and any others
-// are listed as also worth a look. Generic questions, not claims; the client can reword them.
+// The self check: three quick questions, one per service, shown one at a time.
 export const selfCheck = {
   heading: 'Not sure where to start?',
   intro: 'Three quick questions, and we will point you to the service that will help most.',
   questions: [
     { q: 'Do new customers find you online most weeks?', service: 'marketing', needIf: 'no' },
-    { q: 'Does your team lose hours each week to repetitive admin?', service: 'automation', needIf: 'yes' },
-    { q: 'Has anyone checked your systems for security gaps in the last year?', service: 'security', needIf: 'no' },
+    { q: 'Does your content consistently build brand recognition and engagement?', service: 'automation', needIf: 'no' },
+    { q: 'Do you track return on ad spend and conversion data weekly?', service: 'security', needIf: 'no' },
   ] satisfies { q: string; service: ServiceKey; needIf: 'yes' | 'no' }[],
   results: {
-    marketing: 'More of the right people finding you will make the biggest difference right now.',
-    automation: 'Getting the repetitive work off your team\u2019s plate will free up the most time.',
-    security: 'Closing the gaps now costs far less than dealing with a breach later.',
+    marketing: 'Targeted ad campaigns will make the biggest difference in reaching new customers.',
+    automation: 'Upgrading your visual identity and social content will deepen customer trust.',
+    security: 'Clear tracking and weekly performance reporting will maximize your marketing budget.',
     none: 'You are in good shape across all three. If you want a second opinion, we are happy to take a look.',
   } satisfies Record<ServiceKey | 'none', string>,
   suggestionLabel: 'Our suggestion',
@@ -244,12 +250,12 @@ export const faq = {
       a: 'No. You can start with the service that matters most right now and add the others later if they help.',
     },
     {
-      q: 'What does a cybersecurity audit cover?',
-      a: '[Client to confirm the audit scope, for example website, network, email, devices and staff practices.]',
+      q: 'Which platforms do you run advertising on?',
+      a: 'We specialize in Meta (Facebook and Instagram), Google Ads, YouTube, and TikTok, selecting the channels that align with your target audience and acquisition costs.',
     },
     {
-      q: 'Is my data safe with AI automation?',
-      a: '[Client to confirm how client data is handled, which AI providers are used and where data is stored.]',
+      q: 'Do you create the ad creatives and video content?',
+      a: 'Yes. Our creative team produces high quality video edits, photography, copy, and graphics specifically tailored to perform on each platform.',
     },
     {
       q: 'How much do your services cost?',
