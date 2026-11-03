@@ -1,0 +1,29 @@
+---
+import { process } from '../data/home';
+
+// One colour per step, so the sequence reads at a glance. Number colours keep 4.5:1 or more.
+const stepColours = ['bg-brand text-white', 'bg-ai text-white', 'bg-secure text-white', 'bg-ink text-white'];
+---
+
+<section id="process" class="scroll-mt-4 bg-base py-20 md:py-28" aria-labelledby="process-heading">
+  <div class="mx-auto max-w-[76rem] px-4 sm:px-6 lg:px-8">
+    <h2 id="process-heading" class="type-h2 max-w-[16ch]">{process.heading}</h2>
+    <ol class="relative mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8" role="list">
+      <span class="absolute left-7 right-7 top-7 hidden h-0.5 bg-line lg:block" aria-hidden="true"></span>
+      {
+        process.steps.map((step, i) => (
+          <li class="relative">
+            <span
+              class:list={['orb grid size-14 place-items-center rounded-full text-2xl font-semibold ring-8 ring-base', stepColours[i % stepColours.length]]}
+              aria-hidden="true"
+            >
+              {i + 1}
+            </span>
+            <h3 class="type-h3 mt-5 lg:min-h-[2lh]">{step.name}</h3>
+            <p class="mt-3 max-w-[36ch] text-fg-soft">{step.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

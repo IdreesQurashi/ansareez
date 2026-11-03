@@ -1,0 +1,52 @@
+---
+// How the team works with clients: weekly reporting, support, senior review, brand care.
+import { whyUs } from '../data/home';
+---
+
+<section id="why-us" class="scroll-mt-4 bg-raise py-20 md:py-28" aria-labelledby="why-us-heading">
+  <div class="mx-auto grid max-w-[76rem] gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-8">
+    <div class="lg:col-span-4">
+      <h2 id="why-us-heading" class="type-h2">{whyUs.heading}</h2>
+      <p class="mt-4 max-w-[34ch] text-fg-soft">{whyUs.intro}</p>
+    </div>
+    <ul class="grid gap-5 sm:grid-cols-2 lg:col-span-8" role="list">
+      {
+        whyUs.items.map((item) => (
+          <li class="slab tilt-glare rounded-2xl p-6" data-tilt="8">
+            <span class="orb grid size-12 place-items-center rounded-full bg-brand" aria-hidden="true">
+              <svg viewBox="0 0 24 24" class="size-6 fill-none stroke-white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                {item.icon === 'report' && (
+                  <>
+                    <rect x="4" y="3" width="16" height="18" rx="2.5" />
+                    <path d="M8 16 V13 M12 16 V9 M16 16 V11" />
+                  </>
+                )}
+                {item.icon === 'support' && (
+                  <>
+                    <path d="M4 13 V12 A8 8 0 0 1 20 12 V13" />
+                    <rect x="3" y="13" width="4" height="6" rx="1.5" />
+                    <rect x="17" y="13" width="4" height="6" rx="1.5" />
+                    <path d="M19 19 Q19 21 15 21 H13" />
+                  </>
+                )}
+                {item.icon === 'review' && (
+                  <>
+                    <path d="M12 3 L19 6 V11 C19 15.5 16 18.8 12 20.5 C8 18.8 5 15.5 5 11 V6 Z" />
+                    <path d="M9 11.5 L11.2 13.7 L15 9.5" />
+                  </>
+                )}
+                {item.icon === 'brand' && (
+                  <>
+                    <path d="M12 3 L14.2 9.2 L20.5 9.6 L15.6 13.5 L17.2 19.8 L12 16.2 L6.8 19.8 L8.4 13.5 L3.5 9.6 L9.8 9.2 Z" />
+                  </>
+                )}
+              </svg>
+            </span>
+            <h3 class="mt-5 text-xl font-medium">{item.name}</h3>
+            <p class="mt-2 max-w-[38ch] text-fg-soft">{item.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

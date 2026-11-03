@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import Frame from './Frame.astro';
+import { results, serviceNames } from '../data/home';
+import { serviceStyle } from '../lib/service-style';
+
+// Drafts (the placeholders) stay hidden; the section appears with the first real case study
+const studies = (await getCollection('caseStudies', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+{studies.length > 0 && (
+<section id="results" class="scroll-mt-4 border-t border-line bg-base py-20 md:py-28" aria-labelledby="results-heading">
+  <div class="mx-auto max-w-[76rem] px-4 sm:px-6 lg:px-8">
+    <h2 id="results-heading" class="type-h2">{results.heading}</h2>
+    <p class="mt-4 max-w-[46ch] text-fg-soft">{results.intro}</p>
+
+    <ul class="mt-14 grid gap-16" role="list">
+      {
+        studies.map((study) => (
+          <li class="grid items-center gap-6 md:grid-cols-12 md:gap-10">
+            <div class="md:col-span-5">
+              <Frame
+                shape="browser"
+                tone={study.data.tone}
+                title="Cover image"
+                caption="Placeholder"
+                image={study.data.cover}
+                alt={study.data.coverAlt}
+                decorative={!study.data.cover}
+              />
+            </div>
+            <div class="md:col-span-7">
+              <p class:list={['inline-block rounded-full px-3 py-0.5 type-label', serviceStyle[study.data.service].soft, serviceStyle[study.data.service].text]}>{serviceNames[study.data.service]}</p>
+              <p class="type-label mt-1 text-fg-soft">
+                {study.data.client}, {study.data.industry}
+              </p>
+              <h3 class="type-h3 mt-3 max-w-[24ch]">{study.data.headline}</h3>
+              <p class="mt-4 max-w-[52ch] text-fg-soft">{study.data.summary}</p>
+              <p class="type-label mt-4">{study.data.included.join(', ')}</p>
+              <a class="link-underline mt-6 inline-block" href={`/work/${study.id}/`}>
+                Read the case study<span class="sr-only">: {study.data.client}</span>
+              </a>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+)}

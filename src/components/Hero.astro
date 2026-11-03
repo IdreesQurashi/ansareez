@@ -1,0 +1,133 @@
+---
+import Frame from './Frame.astro';
+import { hero } from '../data/home';
+import { site } from '../data/site';
+
+// Each track renders its reels twice so the loop has no seam
+const tracks = [
+  { items: hero.feed.up, direction: 'up' },
+  { items: hero.feed.down, direction: 'down' },
+] as const;
+---
+
+<section class="on-brand hero-gradient relative overflow-hidden text-white" aria-labelledby="hero-heading" data-hero>
+  <div
+    class="mx-auto grid max-w-[76rem] items-center gap-10 px-4 pb-14 pt-6 sm:px-6 md:grid-cols-12 md:gap-8 md:pb-20 md:pt-10 lg:px-8"
+  >
+    <div class="relative z-10 md:col-span-7">
+      <h1 id="hero-heading" class="type-display max-w-[13ch]">{hero.headline}</h1>
+      <p class="type-lead mt-6 max-w-[34ch]">{hero.lead}</p>
+      <div class="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
+        <a class="button-primary" href={site.ctaUrl}>{site.ctaLabel}</a>
+        <a class="link-underline" href="#services">{hero.secondary}</a>
+      </div>
+    </div>
+
+    <div class="relative md:col-span-5">
+      <div class="feed-stage relative" data-feed-stage>
+        <div
+          data-feed
+          aria-hidden="true"
+          class="feed-wall relative grid h-[26rem] grid-cols-2 gap-3 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] sm:h-[32rem] md:h-[min(40rem,76dvh)] md:gap-4"
+        >
+          {
+            tracks.map((track) => (
+              <div class="feed-track" data-direction={track.direction} style={track.direction === 'down' ? 'animation-delay: -14s' : undefined}>
+                {[...track.items, ...track.items].map((item) => (
+                  <Frame tone={item.tone} title={item.topic} caption={item.title} video={item.video} poster={item.poster} class="mb-3 md:mb-4" />
+                ))}
+              </div>
+            ))
+          }
+        </div>
+      </div>
+      <div class="relative mt-3 flex justify-end motion-reduce:hidden">
+        <button
+          type="button"
+          data-motion-toggle
+          aria-pressed="false"
+          class="slab-pill type-label rounded-full px-3.5 py-1.5 text-fg aria-pressed:bg-ink aria-pressed:text-white"
+        >
+          Pause motion
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
+  const feed = document.querySelector<HTMLElement>('[data-feed]');
+  const stage = document.querySelector<HTMLElement>('[data-feed-stage]');
+
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Reel videos: only the ones in view play, and none play when the hero is off screen, the tab
+  // is hidden, Pause motion is pressed, or the visitor prefers reduced motion (posters show instead).
+  const videos = [...document.querySelectorAll<HTMLVideoElement>('[data-reel-video]')];
+  const inView = new Set<HTMLVideoElement>();
+  let userPaused = false;
+  let heroOnScreen = true;
+  const syncVideos = () => {
+    const allowed = !reduceMotion && !userPaused && heroOnScreen && !document.hidden;
+    videos.forEach((video) => {
+      if (allowed && inView.has(video)) {
+        if (video.paused) video.play().catch(() => {});
+      } else if (!video.paused) {
+        video.pause();
+      }
+    });
+  };
+  if (hero && feed && videos.length > 0 && !reduceMotion) {
+    const reelObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) inView.add(video);
+          else inView.delete(video);
+        });
+        syncVideos();
+      },
+      { root: feed, threshold: 0.05 },
+    );
+    videos.forEach((video) => reelObserver.observe(video));
+    new IntersectionObserver(([entry]) => {
+      heroOnScreen = entry?.isIntersecting ?? false;
+      syncVideos();
+    }).observe(hero);
+    document.addEventListener('visibilitychange', syncVideos);
+  }
+
+  toggle?.addEventListener('click', () => {
+    const paused = toggle.getAttribute('aria-pressed') !== 'true';
+    toggle.setAttribute('aria-pressed', String(paused));
+    feed?.toggleAttribute('data-paused', paused);
+    userPaused = paused;
+    syncVideos();
+  });
+
+  // The reels wall leans towards the pointer (desktop pointers only, never with reduced motion)
+  if (hero && stage && finePointer && !reduceMotion) {
+    let frame = 0;
+    hero.addEventListener(
+      'pointermove',
+      (event) => {
+        const rect = hero.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - 0.5;
+        const y = (event.clientY - rect.top) / rect.height - 0.5;
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          stage.style.setProperty('--wall-x', `${(x * 14).toFixed(2)}deg`);
+          stage.style.setProperty('--wall-y', `${(-y * 10).toFixed(2)}deg`);
+        });
+      },
+      { passive: true },
+    );
+    hero.addEventListener('pointerleave', () => {
+      stage.style.setProperty('--wall-x', '0deg');
+      stage.style.setProperty('--wall-y', '0deg');
+    });
+  }
+</script>

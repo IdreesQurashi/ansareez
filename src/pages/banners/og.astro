@@ -1,0 +1,121 @@
+---
+// Source for public/og.png, the 1200 x 630 image shown when the site is shared on social media.
+// Regenerate it by opening /banners/og/ at exactly 1200 x 630 and taking a screenshot.
+// Plain CSS here on purpose: the layout is fixed pixels and must not depend on Tailwind's scan.
+import '@fontsource-variable/rubik';
+import '../../styles/global.css';
+import LogoMark from '../../components/LogoMark.astro';
+import ServiceMap from '../../components/ServiceMap.astro';
+import { hero, serviceNames } from '../../data/home';
+import { site } from '../../data/site';
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Share image | {site.name}</title>
+    <style is:global>
+      body {
+        margin: 0;
+      }
+
+      /* Keep the dev toolbar out of the screenshot */
+      astro-dev-toolbar {
+        display: none !important;
+      }
+
+      .og {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        width: 1200px;
+        height: 630px;
+        padding: 0 64px;
+        box-sizing: border-box;
+        overflow: hidden;
+        color: #fff;
+        background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand) 56%, var(--color-brand-light) 100%);
+      }
+
+      .og-text {
+        width: 640px;
+        flex-shrink: 0;
+      }
+
+      .og-brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 0;
+        font-size: 34px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      .og-brand svg {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        box-shadow: 0 0 0 2px rgb(255 255 255 / 0.4);
+      }
+
+      .og-headline {
+        margin: 40px 0 0;
+        font-size: 68px;
+        font-weight: 600;
+        line-height: 1.02;
+        letter-spacing: -0.02em;
+      }
+
+      .og-services {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 40px 0 0;
+        padding: 0;
+        list-style: none;
+        font-size: 21px;
+        font-weight: 500;
+      }
+
+      .og-services li {
+        padding: 8px 20px;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--color-ink);
+        box-shadow: 0 4px 0 #b9c8e2;
+      }
+
+      .og-art {
+        width: 420px;
+        flex-shrink: 0;
+      }
+
+      /* Freeze the illustration in its finished state */
+      .service-map .tile {
+        opacity: 1 !important;
+        animation: none !important;
+      }
+      .service-map .connector {
+        animation: none !important;
+        stroke-dashoffset: 0 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="og">
+      <div class="og-text">
+        <p class="og-brand"><LogoMark />{site.name}</p>
+        <p class="og-headline">{hero.headline}</p>
+        <ul class="og-services">
+          {Object.values(serviceNames).map((name) => <li>{name}</li>)}
+        </ul>
+      </div>
+      <div class="og-art">
+        <ServiceMap />
+      </div>
+    </div>
+  </body>
+</html>

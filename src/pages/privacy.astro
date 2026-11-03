@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+
+<Base title="Privacy" description={`How ${site.name} handles your information.`}>
+  <article class="mx-auto max-w-[76rem] px-4 py-14 sm:px-6 md:py-20 lg:px-8">
+    <h1 class="type-h2">Privacy</h1>
+    <!-- PLACEHOLDER: the client supplies the real policy. Do not publish this text as is. -->
+    <div class="prose-body mt-8">
+      <p>[Client to supply the privacy policy, written for UK GDPR. The headings below are the sections it needs to cover.]</p>
+      <h2>What we collect</h2>
+      <p>When you use the contact form we receive your name, email address and message, plus your phone number and business name if you add them. [Client to confirm how long messages are kept.]</p>
+      <h2>How we use it</h2>
+      <p>[Only to reply and to run the call. Say whether anything is shared with third parties.]</p>
+      <h2>Cookies and analytics</h2>
+      <p>We use Google Analytics to see how people use this site, but only if you accept analytics cookies when you first visit. If you reject them, no analytics cookies are set. You can change your choice at any time with the Cookie settings link at the bottom of every page.</p>
+      <h2>Your rights</h2>
+      <p>[How to ask for a copy of your data or have it deleted.]</p>
+      <h2>Contact</h2>
+      <p>Questions about this policy: <a href={`mailto:${site.email}`}>{site.email}</a></p>
+    </div>
+  </article>
+</Base>

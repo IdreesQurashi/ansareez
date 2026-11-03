@@ -1,0 +1,131 @@
+---
+// Contact form. Submissions are collected by Netlify Forms once the site is deployed there
+// (free tier). On the local dev server the form shows and validates but does not send.
+import { contact } from '../data/home';
+import { site } from '../data/site';
+
+const realSocials = site.socials.filter((social) => social.href !== '#');
+---
+
+<section id="contact" class="on-brand scroll-mt-4 bg-brand text-white" aria-labelledby="contact-heading">
+  <div class="mx-auto grid max-w-[76rem] gap-12 px-4 py-20 sm:px-6 md:py-28 lg:grid-cols-12 lg:gap-10 lg:px-8">
+    <div class="lg:col-span-5">
+      <h2 id="contact-heading" class="type-h2 max-w-[14ch]">{contact.heading}</h2>
+      <p class="type-lead mt-6 max-w-[36ch]">{contact.lead}</p>
+      <p class="mt-8">
+        {contact.emailPrompt}{' '}
+        <a class="link-underline" href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+      <address class="mt-4 not-italic">
+        {site.address.street}, {site.address.town}, {site.address.postcode}
+      </address>
+      {
+        realSocials.length > 0 && (
+          <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-2" role="list">
+            {realSocials.map((social) => (
+              <li>
+                <a class="link-underline" href={social.href} rel="me noopener" target="_blank">
+                  {social.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    <form
+      name="contact"
+      method="POST"
+      action="/thanks/"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      class="slab contact-form on-light rounded-2xl p-6 text-fg sm:p-8 lg:col-span-7"
+    >
+      <input type="hidden" name="form-name" value="contact" />
+      <p hidden>
+        <label>Leave this field empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+      </p>
+
+      <div class="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label class="field-label" for="cf-name">Name</label>
+          <input class="field-input" id="cf-name" name="name" required autocomplete="name" aria-errormessage="cf-name-error" />
+          <p class="field-error" id="cf-name-error">Enter your name.</p>
+        </div>
+        <div>
+          <label class="field-label" for="cf-email">Email</label>
+          <input
+            class="field-input"
+            id="cf-email"
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+            aria-errormessage="cf-email-error"
+          />
+          <p class="field-error" id="cf-email-error">Enter an email address like name@example.com.</p>
+        </div>
+        <div>
+          <label class="field-label" for="cf-phone">Phone <span class="font-normal text-fg-soft">(optional)</span></label>
+          <input class="field-input" id="cf-phone" name="phone" type="tel" autocomplete="tel" />
+        </div>
+        <div>
+          <label class="field-label" for="cf-company">Business name <span class="font-normal text-fg-soft">(optional)</span></label>
+          <input class="field-input" id="cf-company" name="company" autocomplete="organization" />
+        </div>
+        <div class="sm:col-span-2">
+          <label class="field-label" for="cf-service">What do you need help with?</label>
+          <select class="field-input" id="cf-service" name="service">
+            {contact.serviceOptions.map((option) => <option>{option}</option>)}
+          </select>
+        </div>
+        <div class="sm:col-span-2">
+          <label class="field-label" for="cf-message">Message</label>
+          <textarea
+            class="field-input min-h-36"
+            id="cf-message"
+            name="message"
+            rows="5"
+            required
+            aria-errormessage="cf-message-error"></textarea>
+          <p class="field-error" id="cf-message-error">Tell us a little about what you need.</p>
+        </div>
+      </div>
+
+      <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
+        <p class="text-[0.9375rem] text-fg-soft">
+          {contact.privacyNote} <a class="underline underline-offset-2" href="/privacy/">Privacy policy</a>
+        </p>
+        <button type="submit" class="button-primary button-accent">{contact.submit}</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  // Keep aria-invalid in step with the :user-invalid styling, so screen readers hear the
+  // error only after someone has filled in or left a field, the same moment it appears on screen.
+  const form = document.querySelector<HTMLFormElement>('.contact-form');
+  const sync = (target: EventTarget | null) => {
+    if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement)) return;
+    if (!target.hasAttribute('aria-errormessage')) return;
+    target.setAttribute('aria-invalid', String(target.matches(':user-invalid')));
+  };
+  form?.addEventListener('focusout', (event) => sync(event.target));
+  form?.addEventListener('input', (event) => sync(event.target));
+  // Links like "Talk to us about marketing" carry data-pick-service and pre-select it in the form
+  const serviceSelect = document.querySelector<HTMLSelectElement>('#cf-service');
+  document.addEventListener('click', (event) => {
+    const link = (event.target as Element | null)?.closest<HTMLElement>('[data-pick-service]');
+    if (link && serviceSelect && link.dataset.pickService) {
+      serviceSelect.value = link.dataset.pickService;
+    }
+  });
+  // A blocked submit counts as interaction, so flag every invalid field it reports
+  form?.addEventListener(
+    'invalid',
+    (event) => requestAnimationFrame(() => sync(event.target)),
+    true,
+  );
+</script>

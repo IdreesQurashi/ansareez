@@ -1,0 +1,59 @@
+---
+import LogoMark from './LogoMark.astro';
+import { serviceNames } from '../data/home';
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="on-brand bg-ink text-white/80">
+  <div class="mx-auto grid max-w-[76rem] gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr] lg:px-8">
+    <div>
+      <a href="/" class="flex items-center gap-2.5 text-xl font-semibold tracking-tight text-white">
+        <LogoMark class="size-9" />
+        {site.name}
+      </a>
+      <address class="mt-5 not-italic">
+        {site.address.street}, {site.address.town}, {site.address.postcode}
+        <br />
+        <a class="underline-offset-4 hover:underline" href={`mailto:${site.email}`}>{site.email}</a>
+      </address>
+    </div>
+    <nav aria-labelledby="footer-services">
+      <h2 id="footer-services" class="type-label text-white">Services</h2>
+      <ul class="mt-3 grid gap-2" role="list">
+        {
+          Object.entries(serviceNames).map(([key, name]) => (
+            <li>
+              <a class="underline-offset-4 hover:underline" href={`/#${key}`}>
+                {name}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a class="underline-offset-4 hover:underline" href="/#more-services">More services</a>
+        </li>
+      </ul>
+    </nav>
+    <nav aria-labelledby="footer-follow">
+      <h2 id="footer-follow" class="type-label text-white">Follow us</h2>
+      <ul class="mt-3 grid gap-2" role="list">
+        {
+          site.socials.map((social) => (
+            <li>
+              <a class="underline-offset-4 hover:underline" href={social.href} rel="me noopener" target="_blank">
+                {social.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/15 pt-6 type-label text-white/70 md:col-span-3">
+      <p>&copy; {year} {site.name}</p>
+      <a class="underline-offset-4 hover:underline" href="/privacy/">Privacy policy</a>
+      <button type="button" data-consent-open hidden class="underline-offset-4 hover:underline">Cookie settings</button>
+    </div>
+  </div>
+</footer>

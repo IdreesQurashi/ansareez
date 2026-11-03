@@ -1,0 +1,78 @@
+---
+// Gallery with a lightbox. Renders nothing until photos are listed in src/data/gallery.ts,
+// so the live site never shows empty placeholder tiles.
+import { Image, getImage } from 'astro:assets';
+import { gallery } from '../data/home';
+import { galleryImages } from '../data/gallery';
+
+// A larger copy of each photo for the lightbox
+const photos = await Promise.all(
+  galleryImages.map(async (item) => ({
+    ...item,
+    large: (await getImage({ src: item.image, width: 1600 })).src,
+  })),
+);
+---
+
+{
+  photos.length > 0 && (
+    <section id="gallery" class="scroll-mt-4 bg-base py-20 md:py-28" aria-labelledby="gallery-heading">
+      <div class="mx-auto max-w-[76rem] px-4 sm:px-6 lg:px-8">
+        <h2 id="gallery-heading" class="type-h2">
+          {gallery.heading}
+        </h2>
+        <p class="mt-4 max-w-[40ch] text-fg-soft">{gallery.intro}</p>
+        <ul class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4" role="list">
+          {photos.map((photo) => (
+            <li>
+              <button
+                type="button"
+                class="group block w-full overflow-hidden rounded-xl"
+                data-lightbox-open={photo.large}
+                data-lightbox-alt={photo.alt}
+                aria-haspopup="dialog"
+              >
+                <Image
+                  src={photo.image}
+                  alt={photo.alt}
+                  widths={[320, 640, 960]}
+                  sizes="(min-width: 48rem) 33vw, 50vw"
+                  class="aspect-square w-full object-cover transition-[scale] duration-300 group-hover:scale-105 motion-reduce:transition-none"
+                />
+              </button>
+            </li>
+          ))}
+        </ul>
+        <dialog
+          data-lightbox
+          aria-label="Photo"
+          class="m-auto max-h-[92dvh] max-w-[min(94vw,72rem)] overflow-visible bg-transparent p-0 backdrop:bg-ink/85"
+        >
+          <img data-lightbox-img src="" alt="" class="max-h-[84dvh] w-auto rounded-xl object-contain" />
+          <form method="dialog" class="mt-3 flex justify-end">
+            <button class="button-primary button-accent button-small">Close</button>
+          </form>
+        </dialog>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]');
+  const img = dialog?.querySelector<HTMLImageElement>('[data-lightbox-img]');
+
+  document.querySelectorAll<HTMLButtonElement>('[data-lightbox-open]').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (!dialog || !img) return;
+      img.src = button.dataset.lightboxOpen ?? '';
+      img.alt = button.dataset.lightboxAlt ?? '';
+      dialog.showModal();
+    });
+  });
+
+  // Clicking the dark area around the photo closes it, like pressing Escape
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+</script>

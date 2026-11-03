@@ -1,0 +1,50 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Frame from '../../components/Frame.astro';
+import { serviceNames } from '../../data/home';
+import { site } from '../../data/site';
+
+export async function getStaticPaths() {
+  const studies = await getCollection('caseStudies', ({ data }) => !data.draft);
+  return studies.map((study) => ({
+    params: { id: study.id },
+    props: { study },
+  }));
+}
+
+const { study } = Astro.props;
+const { Content } = await render(study);
+---
+
+<Base title={`${study.data.client} case study`} description={study.data.summary}>
+  <article class="mx-auto max-w-[76rem] px-4 py-14 sm:px-6 md:py-20 lg:px-8">
+    <a class="link-underline type-label" href="/#results">All results</a>
+    <div class="mt-8 grid gap-10 md:grid-cols-12 md:gap-10">
+      <header class="md:col-span-7">
+        <p class="type-label text-fg-soft">{serviceNames[study.data.service]}</p>
+        <p class="type-label mt-1 text-fg-soft">{study.data.client}, {study.data.industry}</p>
+        <h1 class="type-h2 mt-4">{study.data.headline}</h1>
+        <p class="type-lead mt-6 max-w-[48ch] text-fg-soft">{study.data.summary}</p>
+        <p class="type-label mt-6">{study.data.included.join(', ')}</p>
+      </header>
+      <div class="md:col-span-5">
+        <Frame
+          shape="browser"
+          tone={study.data.tone}
+          title="Cover image"
+          caption="Placeholder"
+          image={study.data.cover}
+          alt={study.data.coverAlt}
+          decorative={!study.data.cover}
+        />
+      </div>
+    </div>
+    <div class="prose-body mt-12">
+      <Content />
+    </div>
+    <p class="mt-16">
+      <a class="button-primary button-accent" href={site.ctaUrl}>{site.ctaLabel}</a>
+    </p>
+  </article>
+</Base>

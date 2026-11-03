@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import LogoMark from './LogoMark.astro';
+import { clientLogos } from '../data/clients';
+import { galleryImages } from '../data/gallery';
+import { site } from '../data/site';
+
+interface Props {
+  tone?: 'brand' | 'paper';
+}
+
+const { tone = 'brand' } = Astro.props;
+
+// Hide menu links to sections that are not shown yet
+const hasResults = (await getCollection('caseStudies', ({ data }) => !data.draft)).length > 0;
+const hidden = new Set([
+  !hasResults && '/#results',
+  galleryImages.length === 0 && '/#gallery',
+  // The clients section previews with placeholder slots in development only
+  clientLogos.length === 0 && !import.meta.env.DEV && '/#clients',
+]);
+const nav = site.nav.filter((item) => !hidden.has(item.href));
+---
+
+<header class:list={[tone === 'brand' ? 'on-brand border-b border-white/15 bg-brand text-white' : 'border-b border-line']}>
+  <div class="mx-auto flex max-w-[76rem] items-center justify-between gap-6 px-4 py-4 sm:px-6 lg:px-8">
+    <a href="/" class="flex items-center gap-2.5 text-xl font-semibold tracking-tight">
+      <LogoMark class:list={['size-9', tone === 'brand' && 'rounded-[0.6rem] ring-1 ring-white/40']} />
+      {site.name}
+    </a>
+    <nav aria-label="Main">
+      <ul class="flex items-center gap-7">
+        {
+          nav.map((item) => (
+            <li class="hidden lg:block">
+              <a class="type-label underline-offset-4 hover:underline" href={item.href}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a
+            class:list={['button-primary button-small', tone === 'paper' && 'button-accent']}
+            href={site.ctaUrl}
+          >
+            {site.ctaLabel}
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>

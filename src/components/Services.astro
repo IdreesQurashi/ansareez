@@ -1,0 +1,73 @@
+---
+import ServiceArt from './ServiceArt.astro';
+import ServiceMap from './ServiceMap.astro';
+import { overview, services, serviceNames, serviceVerbs } from '../data/home';
+import { serviceStyle } from '../lib/service-style';
+---
+
+<section id="services" class="on-brand scroll-mt-4 bg-ink text-white" aria-labelledby="services-heading">
+  <div class="mx-auto grid max-w-[76rem] items-center gap-12 px-4 py-20 sm:px-6 md:grid-cols-12 md:gap-8 md:py-28 lg:px-8">
+    <div class="md:col-span-6 lg:col-span-5">
+      <h2 id="services-heading" class="type-h2">{overview.heading}</h2>
+      <p class="type-lead mt-5 max-w-[36ch] text-white/85">{overview.intro}</p>
+      <ul class="mt-9 flex flex-wrap gap-3" role="list">
+        {
+          services.items.map((item) => (
+            <li>
+              <a
+                href={`#${item.key}`}
+                class="slab-pill inline-flex items-center gap-2.5 rounded-full px-4 py-2 font-medium text-fg transition-transform hover:-translate-y-0.5"
+              >
+                <span class:list={['size-2.5 rounded-full', serviceStyle[item.key].dot]} aria-hidden="true" />
+                <span class="font-semibold">{serviceVerbs[item.key].verb}</span>
+                <span class="text-fg-soft">{serviceNames[item.key]}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="depth-shadow mx-auto w-full max-w-[26rem] md:col-span-6 md:max-w-none lg:col-span-6 lg:col-start-7" data-tilt="8">
+      <ServiceMap />
+    </div>
+  </div>
+</section>
+
+{
+  services.items.map((item, i) => (
+    <section
+      id={item.key}
+      class:list={['scroll-mt-4 py-20 md:py-24', i % 2 === 1 ? 'bg-base' : 'bg-raise']}
+      aria-labelledby={`${item.key}-heading`}
+    >
+      <div class="mx-auto grid max-w-[76rem] items-center gap-10 px-4 sm:px-6 md:grid-cols-2 md:gap-14 lg:px-8">
+        <div class:list={['depth-shadow', i % 2 === 1 && 'md:order-2']} data-tilt="8">
+          <ServiceArt kind={item.key} />
+        </div>
+        <div>
+          <p class:list={['inline-flex items-center gap-2 rounded-full px-3.5 py-1 type-label', serviceStyle[item.key].soft, serviceStyle[item.key].text]}>
+            <span class:list={['size-2 rounded-full', serviceStyle[item.key].dot]} aria-hidden="true" />
+            {serviceVerbs[item.key].verb}
+          </p>
+          <h3 id={`${item.key}-heading`} class="type-h2 mt-4">{serviceNames[item.key]}</h3>
+          <p class:list={['mt-3 text-xl font-medium', serviceStyle[item.key].text]}>{item.tagline}</p>
+          <p class="mt-4 max-w-[48ch] text-fg-soft">{item.body}</p>
+          <ul class="mt-6 grid gap-2.5" role="list">
+            {item.includes.map((line) => (
+              <li class="flex gap-3">
+                <svg viewBox="0 0 20 20" class="mt-1 size-5 shrink-0" aria-hidden="true">
+                  <circle cx="10" cy="10" r="10" class={serviceStyle[item.key].fill} />
+                  <path d="M6 10.5 L8.8 13.2 L14 7.5" class="fill-none stroke-white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>{line}</span>
+              </li>
+            ))}
+          </ul>
+          <a class="button-primary button-accent mt-8" href="#contact" data-pick-service={serviceNames[item.key]}>
+            {item.cta}
+          </a>
+        </div>
+      </div>
+    </section>
+  ))
+}

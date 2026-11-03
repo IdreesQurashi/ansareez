@@ -1,0 +1,157 @@
+---
+// "Not sure where to start?" One question at a time on a single card: a slim progress bar,
+// the question, and two large Yes and No buttons. Answering moves on; Back steps back. The
+// result names the first service that showed a need, lists any others, and its button
+// pre-selects that service in the contact form. Everything runs in the browser.
+import { selfCheck, serviceNames, services } from '../data/home';
+import { serviceStyle } from '../lib/service-style';
+
+const total = selfCheck.questions.length;
+const ctas = Object.fromEntries(services.items.map((item) => [item.key, item.cta]));
+const dots = Object.fromEntries(Object.entries(serviceStyle).map(([key, style]) => [key, style.dot]));
+---
+
+<section id="start" class="on-brand scroll-mt-4 bg-night py-20 text-white md:py-28" aria-labelledby="start-heading">
+  <div class="mx-auto grid max-w-[76rem] items-center gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-12 lg:px-8">
+    <div class="lg:col-span-5">
+      <h2 id="start-heading" class="type-h2 max-w-[12ch]">{selfCheck.heading}</h2>
+      <p class="type-lead mt-5 max-w-[32ch] text-white/85">{selfCheck.intro}</p>
+    </div>
+
+    <div class="slab on-light self-check flex min-h-[22rem] flex-col rounded-3xl p-6 text-fg sm:p-9 lg:col-span-7" data-self-check>
+      <div class="flex items-center justify-between gap-4" data-progress-row>
+        <p class="type-label text-fg-soft" data-progress-label>Question 1 of {total}</p>
+        <div class="flex w-28 gap-1.5" aria-hidden="true">
+          {selfCheck.questions.map((_, i) => <span class:list={['h-1.5 flex-1 rounded-full', i === 0 ? 'bg-brand' : 'bg-line']} data-progress-bar />)}
+        </div>
+      </div>
+
+      {
+        selfCheck.questions.map((question, i) => (
+          <div class="check-step mt-8 flex flex-1 flex-col" data-step={i} hidden={i !== 0}>
+            <h3 class="max-w-[24ch] text-2xl font-semibold leading-snug sm:text-[1.75rem]" tabindex="-1" data-step-heading style="outline: none">
+              {question.q}
+            </h3>
+            <div class="mt-8 grid grid-cols-2 gap-3 sm:gap-4">
+              {(['yes', 'no'] as const).map((answer) => (
+                <button
+                  type="button"
+                  class="answer-button"
+                  data-answer={answer}
+                  data-service={question.service}
+                  data-need={String(answer === question.needIf)}
+                >
+                  {answer === 'yes' ? 'Yes' : 'No'}
+                </button>
+              ))}
+            </div>
+            <div class="mt-auto pt-6">
+              {i > 0 && (
+                <button type="button" class="type-label text-fg-soft underline underline-offset-4 hover:text-fg" data-back>
+                  {selfCheck.back}
+                </button>
+              )}
+            </div>
+          </div>
+        ))
+      }
+
+      <div class="check-step mt-2 flex flex-1 flex-col" data-result hidden>
+        <p class="type-label text-fg-soft">{selfCheck.suggestionLabel}</p>
+        <h3 class="mt-3 flex items-center gap-3 text-[1.75rem] font-semibold leading-tight sm:text-[2rem]" tabindex="-1" data-result-heading style="outline: none">
+          <span class="orb size-4 shrink-0 rounded-full" aria-hidden="true" data-result-dot></span>
+          <span data-result-title></span>
+        </h3>
+        <p class="mt-3 max-w-[44ch] text-fg-soft" data-result-text></p>
+        <p class="mt-4 text-[0.9375rem] text-fg-soft" data-result-also hidden>
+          {selfCheck.alsoLabel} <span class="font-medium text-fg" data-result-also-list></span>
+        </p>
+        <div class="mt-auto flex flex-wrap items-center gap-x-6 gap-y-3 pt-8">
+          <a class="button-primary button-accent" href="#contact" data-result-cta>Talk to us</a>
+          <button type="button" class="type-label text-fg-soft underline underline-offset-4 hover:text-fg" data-restart>
+            {selfCheck.restart}
+          </button>
+        </div>
+      </div>
+
+      <p class="sr-only" role="status" data-announce></p>
+    </div>
+  </div>
+</section>
+
+<script
+  define:vars={{
+    names: serviceNames,
+    results: selfCheck.results,
+    ctas,
+    dots,
+    noneTitle: selfCheck.noneTitle,
+    total,
+  }}
+>
+  const card = document.querySelector('[data-self-check]');
+  if (card) {
+    const steps = [...card.querySelectorAll('[data-step]')];
+    const result = card.querySelector('[data-result]');
+    const progressRow = card.querySelector('[data-progress-row]');
+    const progressLabel = card.querySelector('[data-progress-label]');
+    const bars = [...card.querySelectorAll('[data-progress-bar]')];
+    const announce = card.querySelector('[data-announce]');
+    const answers = [];
+
+    const show = (panel) => {
+      [...steps, result].forEach((el) => (el.hidden = el !== panel));
+      panel.querySelector('[tabindex="-1"]')?.focus();
+    };
+
+    const goTo = (index) => {
+      progressRow.hidden = false;
+      progressLabel.textContent = `Question ${index + 1} of ${total}`;
+      bars.forEach((bar, i) => {
+        bar.classList.toggle('bg-brand', i <= index);
+        bar.classList.toggle('bg-line', i > index);
+      });
+      show(steps[index]);
+    };
+
+    const showResult = () => {
+      const needs = answers.filter((a) => a.need).map((a) => a.service);
+      const top = needs[0];
+      const dot = result.querySelector('[data-result-dot]');
+      Object.values(dots).forEach((cls) => dot.classList.remove(cls));
+      dot.classList.remove('bg-brand');
+      dot.classList.add(top ? dots[top] : 'bg-brand');
+      result.querySelector('[data-result-title]').textContent = top ? names[top] : noneTitle;
+      result.querySelector('[data-result-text]').textContent = top ? results[top] : results.none;
+      const also = result.querySelector('[data-result-also]');
+      also.hidden = needs.length < 2;
+      result.querySelector('[data-result-also-list]').textContent = needs
+        .slice(1)
+        .map((key) => names[key])
+        .join(' and ');
+      const cta = result.querySelector('[data-result-cta]');
+      cta.textContent = top ? ctas[top] : 'Talk to us';
+      cta.dataset.pickService = top ? names[top] : 'Not sure yet';
+      progressRow.hidden = true;
+      show(result);
+      announce.textContent = top ? `Our suggestion: ${names[top]}` : noneTitle;
+    };
+
+    card.addEventListener('click', (event) => {
+      const target = event.target.closest('button');
+      if (!target) return;
+      if (target.dataset.answer) {
+        const index = steps.indexOf(target.closest('[data-step]'));
+        answers[index] = { service: target.dataset.service, need: target.dataset.need === 'true' };
+        if (index + 1 < steps.length) goTo(index + 1);
+        else showResult();
+      } else if (target.hasAttribute('data-back')) {
+        const index = steps.indexOf(target.closest('[data-step]'));
+        goTo(Math.max(0, index - 1));
+      } else if (target.hasAttribute('data-restart')) {
+        answers.length = 0;
+        goTo(0);
+      }
+    });
+  }
+</script>

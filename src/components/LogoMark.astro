@@ -1,0 +1,22 @@
+---
+// Ansareez logo mark, v1: an open "A" that reads as a rising peak, with a node where the
+// crossbar would be. Growth plus a connected system. The same drawing is public/favicon.svg.
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const id = `logo-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<svg viewBox="0 0 64 64" class={className} aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0069F6" />
+      <stop offset="1" stop-color="#01A2F7" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill={`url(#${id})`} />
+  <path d="M17 47 L32 16 L47 47" fill="none" stroke="#fff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" />
+  <circle cx="32" cy="37" r="4.5" fill="#fff" />
+</svg>

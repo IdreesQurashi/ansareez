@@ -1,0 +1,66 @@
+---
+// Services beyond the three main ones, in three groups. One row per group: the group name on
+// the left, its services in two columns on the right, so groups of different sizes stay tidy.
+import { moreServices } from '../data/home';
+---
+
+<section id="more-services" class="scroll-mt-4 bg-base py-20 md:py-28" aria-labelledby="more-services-heading">
+  <div class="mx-auto max-w-[76rem] px-4 sm:px-6 lg:px-8">
+    <h2 id="more-services-heading" class="type-h2">{moreServices.heading}</h2>
+    <p class="mt-4 max-w-[46ch] text-fg-soft">{moreServices.intro}</p>
+
+    <div class="mt-12 border-t border-line">
+      {
+        moreServices.groups.map((group) => (
+          <section
+            id={group.key}
+            class="grid scroll-mt-4 gap-6 border-b border-line py-10 lg:grid-cols-12 lg:gap-10"
+            aria-labelledby={`${group.key}-heading`}
+          >
+            <div class="lg:col-span-4">
+              <span class="orb grid size-12 place-items-center rounded-full bg-brand" aria-hidden="true">
+                <svg viewBox="0 0 24 24" class="size-6 fill-none stroke-white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  {group.icon === 'shield' && (
+                    <>
+                      <path d="M12 3 L19 6 V11 C19 15.5 16 18.8 12 20.5 C8 18.8 5 15.5 5 11 V6 Z" />
+                      <circle cx="12" cy="11" r="2.5" />
+                    </>
+                  )}
+                  {group.icon === 'server' && (
+                    <>
+                      <rect x="4" y="4" width="16" height="6" rx="1.5" />
+                      <rect x="4" y="14" width="16" height="6" rx="1.5" />
+                      <path d="M8 7 H8.01 M8 17 H8.01 M12 10 V14" />
+                    </>
+                  )}
+                  {group.icon === 'pen' && (
+                    <>
+                      <path d="M4 20 L5 15.5 L15.5 5 A2.1 2.1 0 0 1 18.5 8 L8 18.5 Z" />
+                      <path d="M13.5 7 L16.5 10" />
+                    </>
+                  )}
+                </svg>
+              </span>
+              <h3 id={`${group.key}-heading`} class="type-h3 mt-5">
+                {group.name}
+              </h3>
+              <p class="mt-2 max-w-[32ch] text-fg-soft">{group.blurb}</p>
+            </div>
+            <ul class="grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:col-span-8" role="list">
+              {group.items.map((item) => (
+                <li>
+                  <h4 class="font-medium">{item.name}</h4>
+                  <p class="mt-1 text-[0.9375rem] leading-relaxed text-fg-soft">{item.body}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+
+    <p class="mt-10">
+      <a class="button-primary button-accent" href="#contact" data-pick-service="Not sure yet">Ask about a service</a>
+    </p>
+  </div>
+</section>

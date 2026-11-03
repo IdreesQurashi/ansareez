@@ -1,0 +1,589 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Rubik Variable", ui-sans-serif, system-ui, sans-serif;
+
+  /* Client blue, sampled from their reference design (25 Oct 2026). Never change these. */
+  --color-brand: #0069f6;
+  --color-brand-light: #01a2f7;
+  --color-brand-deep: #0546b5;
+
+  /* Supporting colours (26 Oct 2026, revised): cool tones that sit next to the blue.
+     No yellow and no warm colours anywhere (Idrees). Each service owns one hue:
+     grow (marketing) is the client's own sky blue, ai is violet, secure is deep teal.
+     The plain shade is for fills and icons, -soft for tints and chips, -ink for text. */
+  --color-grow: #01a2f7;
+  --color-grow-soft: #e8f5fe;
+  --color-grow-ink: #0a5c8f;
+  --color-ai: #6a4df4;
+  --color-ai-soft: #f0edff;
+  --color-ai-ink: #4b30c9;
+  --color-secure: #0b7a72;
+  --color-secure-soft: #e5f5f3;
+  --color-secure-ink: #0b6b63;
+  /* Very dark violet for the self check band */
+  --color-night: #16113a;
+
+  /* White and blue (27 Oct 2026, after a dark trial): Idrees went back to white and blue with the
+     same colours, keeping the 3D touches. base is white, raise is the pale paper band, panel the
+     cards. fg is ink text, fg-soft secondary text. */
+  --color-base: #ffffff;
+  --color-raise: #f6f7fb;
+  --color-panel: #ffffff;
+  --color-fg: #0b1e3f;
+  --color-fg-soft: #46597a;
+  --color-line: #d9e5f7;
+  /* Navy fill used in frames and the cookie banner */
+  --color-ink: #0b1e3f;
+  /* The one light surface: client logo tiles, because many logos have dark lettering */
+  --color-chip: #e9eef7;
+  /* Form field borders need 3:1 against the panel and the page */
+  --color-field: #7c8ba6;
+  --color-danger: #c0262d;
+}
+
+@layer base {
+  html {
+    background: var(--color-raise);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+
+    @media (prefers-reduced-motion: reduce) {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    overflow-wrap: break-word;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* On blue and dark sections a blue ring disappears, so switch to white */
+  .on-brand :focus-visible {
+    outline-color: #fff;
+  }
+
+  /* ...but white panels inside those sections (forms, the self check) go back to blue */
+  .on-brand .on-light :focus-visible {
+    outline-color: var(--color-brand);
+  }
+}
+
+@layer components {
+  .type-display {
+    text-shadow:
+      0 1px 0 #cddcf4,
+      0 2px 0 #bfd1ef,
+      0 3px 0 #b1c6ea,
+      0 4px 0 #a3bbe5,
+      0 14px 24px rgb(11 30 63 / 0.18);
+    font-size: clamp(2.475rem, 1.26rem + 4.68vw, 5.4rem);
+    line-height: 1.02;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .type-h2 {
+    text-shadow:
+      0 1px 0 #cddcf4,
+      0 2px 0 #bfd1ef,
+      0 3px 0 #b1c6ea,
+      0 10px 18px rgb(11 30 63 / 0.16);
+    font-size: clamp(2.25rem, 1.5rem + 2.8vw, 3.75rem);
+    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  .type-h3 {
+    text-shadow:
+      0 1px 0 #d3e0f5,
+      0 2px 0 #bfd1ef,
+      0 6px 12px rgb(11 30 63 / 0.14);
+    font-size: clamp(1.375rem, 1.15rem + 0.9vw, 1.875rem);
+    line-height: 1.15;
+    font-weight: 500;
+    text-wrap: balance;
+  }
+
+  .type-lead {
+    font-size: clamp(1.1875rem, 1.05rem + 0.55vw, 1.4375rem);
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+
+  .type-label {
+    font-size: 0.875rem;
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  /* Call to action on blue and navy sections: white with ink text */
+  .button-primary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 3rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--color-ink);
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 150ms ease;
+
+    &:hover {
+      background: #e3eeff;
+    }
+  }
+
+  /* Variants come after .button-primary so they win at equal specificity */
+  /* Call to action on light sections */
+  .button-accent {
+    background: var(--color-brand);
+    color: #fff;
+
+    &:hover {
+      background: var(--color-brand-deep);
+    }
+  }
+
+  .button-small {
+    min-height: 2.5rem;
+    padding: 0.5rem 1.125rem;
+    font-size: 1rem;
+  }
+
+  .link-underline {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.25em;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration-thickness: 3px;
+    }
+  }
+
+  /* Form fields. Errors show only after someone has used a field (:user-invalid). */
+  .field-label {
+    display: block;
+    margin-bottom: 0.375rem;
+    font-weight: 500;
+  }
+
+  .field-input {
+    display: block;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.625rem 0.875rem;
+    border: 1.5px solid var(--color-field);
+    border-radius: 0.75rem;
+    background: var(--color-base);
+    color: var(--color-fg);
+    font: inherit;
+    box-shadow:
+      inset 0 2px 4px rgb(11 30 63 / 0.12),
+      0 1px 0 rgb(255 255 255 / 0.9);
+
+    &:focus-visible {
+      border-color: var(--color-brand);
+      outline: 3px solid var(--color-brand);
+      outline-offset: 1px;
+    }
+
+    &:user-invalid {
+      border-color: var(--color-danger);
+      background: #fff6f6;
+    }
+  }
+
+  .field-error {
+    display: none;
+    margin-top: 0.375rem;
+    color: var(--color-danger);
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  .field-input:user-invalid + .field-error {
+    display: block;
+  }
+
+  /* Self check answers: large raised keys that turn blue on hover and press down */
+  .answer-button {
+    min-height: 3.75rem;
+    border-radius: 1rem;
+    background: var(--color-panel);
+    color: var(--color-fg);
+    font-size: 1.125rem;
+    font-weight: 600;
+    box-shadow:
+      inset 0 1px 0 #fff,
+      0 0 0 1px var(--color-line),
+      0 4px 0 1px #c9d5ea,
+      0 12px 20px -12px rgb(11 30 63 / 0.3);
+    transition:
+      transform 120ms ease,
+      box-shadow 150ms ease,
+      background-color 150ms ease,
+      color 150ms ease;
+
+    &:hover {
+      background: var(--color-brand);
+      color: #fff;
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.28),
+        0 0 0 1px var(--color-brand),
+        0 4px 0 1px var(--color-brand-deep),
+        0 14px 24px -12px rgb(0 105 246 / 0.6);
+    }
+
+    &:active {
+      transform: translateY(3px);
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.2),
+        0 0 0 1px var(--color-brand),
+        0 1px 0 1px var(--color-brand-deep),
+        0 6px 12px -8px rgb(0 105 246 / 0.5);
+    }
+  }
+
+  /* Each self check step slides in gently; still for reduced motion */
+  .check-step:not([hidden]) {
+    animation: step-in 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  /* Long form text for case studies and the privacy page */
+  .prose-body {
+    max-width: 62ch;
+
+    & h2 {
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.5rem;
+      line-height: 1.2;
+      font-weight: 600;
+    }
+
+    & p,
+    & ul {
+      margin-top: 1rem;
+      text-wrap: pretty;
+    }
+
+    & ul {
+      padding-left: 1.25rem;
+      list-style: disc;
+    }
+
+    & a {
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
+  }
+}
+
+/* Hero background in the client's blue gradient. White text only reaches 4.5:1 on the
+   royal blue, so the text side stays solid and the sky blue sits behind the reels:
+   on the right from 768px up (solid to 58%), at the bottom below that (solid to 60%). */
+.hero-gradient {
+  background: linear-gradient(180deg, var(--color-brand) 0%, var(--color-brand) 60%, var(--color-brand-light) 100%);
+
+  @media (width >= 48rem) {
+    background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand) 58%, var(--color-brand-light) 100%);
+  }
+}
+
+/* Hero feed: two columns of reels drifting like a scrolling feed. Each track holds its
+   frames twice, and every frame carries its own bottom margin, so translating by exactly
+   half the track height loops with no seam. Pause button in the hero; still under
+   reduced motion. */
+.feed-track {
+  animation: feed-up 46s linear infinite;
+
+  &[data-direction="down"] {
+    animation-name: feed-down;
+    animation-duration: 58s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+[data-feed][data-paused] .feed-track {
+  animation-play-state: paused;
+}
+
+@keyframes feed-up {
+  to {
+    translate: 0 -50%;
+  }
+}
+
+@keyframes feed-down {
+  from {
+    translate: 0 -50%;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+/* Service map (the Grow, Automate, Protect cards): the cards rise in turn and the
+   connectors draw between them, once, when the map scrolls into view. Its script adds
+   data-animate only when motion is allowed, so without JavaScript it is simply static. */
+.service-map[data-animate] {
+  & .tile {
+    opacity: 0;
+  }
+
+  & .connector {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  &.is-visible .tile {
+    opacity: 1;
+    animation: art-rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  &.is-visible .tile-2 {
+    animation-delay: 450ms;
+  }
+
+  &.is-visible .tile-3 {
+    animation-delay: 900ms;
+  }
+
+  &.is-visible .connector {
+    animation: art-draw 450ms ease-out forwards;
+  }
+
+  &.is-visible .connector-1 {
+    animation-delay: 300ms;
+  }
+
+  &.is-visible .connector-2 {
+    animation-delay: 750ms;
+  }
+}
+
+@keyframes art-rise {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+
+@keyframes art-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ===== 3D (27 Oct 2026: Idrees asked for "ultra 3D", kept when the site went back to white and blue) ===== */
+/* In the components layer, so utility classes (rings, backgrounds) still win */
+@layer components {
+  /* On blue and navy sections, headings take a deep blue extrusion under white letters */
+  .on-brand .type-display {
+    text-shadow:
+      0 1px 0 #1d4ea6,
+      0 2px 0 #1a4592,
+      0 3px 0 #163c7f,
+      0 4px 0 #12336c,
+      0 5px 0 #0e2a59,
+      0 18px 30px rgb(0 0 0 / 0.45);
+  }
+
+  .on-brand .type-h2 {
+    text-shadow:
+      0 1px 0 #1a4592,
+      0 2px 0 #153b7d,
+      0 3px 0 #10316a,
+      0 12px 22px rgb(0 0 0 / 0.4);
+  }
+
+  /* Headings inside white panels on those sections go back to the light extrusion */
+  .on-brand .on-light .type-h3 {
+    text-shadow:
+      0 1px 0 #d3e0f5,
+      0 2px 0 #bfd1ef,
+      0 6px 12px rgb(11 30 63 / 0.14);
+  }
+
+  /* Hero: the reels sit on a wall tilted in 3D, leaning towards the pointer.
+     The tilt is a fixed angle, not motion, so it stays for reduced motion too. */
+  .feed-stage {
+    perspective: 1200px;
+  }
+
+  .feed-wall {
+    transform: rotateX(calc(12deg + var(--wall-y, 0deg))) rotateY(calc(-18deg + var(--wall-x, 0deg))) rotateZ(3deg)
+      scale(0.94);
+    transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+
+    @media (width < 48rem) {
+      transform: rotateX(10deg) rotateY(-12deg) rotateZ(2deg) scale(0.94);
+    }
+  }
+
+  /* Reels read as glossy glass panels: a soft top highlight and a deep shadow */
+  .reel-3d {
+    box-shadow:
+      0 24px 40px -18px rgb(3 20 60 / 0.75),
+      inset 0 1px 0 rgb(255 255 255 / 0.3);
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(160deg, rgb(255 255 255 / 0.18) 0%, transparent 38%);
+      pointer-events: none;
+    }
+  }
+
+  /* Anything with data-tilt leans towards the pointer and lifts (script: src/scripts/tilt.ts) */
+  [data-tilt] {
+    transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition:
+      transform 450ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 450ms ease;
+
+    &[data-tilting] {
+      transition-duration: 90ms, 450ms;
+    }
+  }
+
+  /* A soft blue sheen that follows the pointer across tilted tiles */
+  .tilt-glare {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        circle at var(--glare-x, 50%) var(--glare-y, 50%),
+        rgb(0 105 246 / 0.09),
+        transparent 55%
+      );
+      opacity: 0;
+      transition: opacity 300ms ease;
+      pointer-events: none;
+    }
+
+    &[data-tilting]::after {
+      opacity: 1;
+    }
+
+    &[data-tilting] {
+      --slab-glow: 0 30px 50px -22px rgb(0 105 246 / 0.45);
+    }
+  }
+
+  /* Illustrations float with depth */
+  .depth-shadow {
+    filter: drop-shadow(0 26px 30px rgb(11 30 63 / 0.22));
+  }
+
+  /* Buttons are physical: a raised edge that presses down */
+  .button-primary {
+    box-shadow:
+      inset 0 1px 0 #fff,
+      0 4px 0 #b9c8e2,
+      0 14px 26px -12px rgb(3 20 60 / 0.45);
+    transition:
+      background-color 150ms ease,
+      transform 120ms ease,
+      box-shadow 120ms ease;
+
+    &:active {
+      transform: translateY(3px);
+      box-shadow:
+        inset 0 1px 0 #fff,
+        0 1px 0 #b9c8e2,
+        0 8px 16px -10px rgb(3 20 60 / 0.4);
+    }
+  }
+
+  .button-accent {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.28),
+      0 4px 0 var(--color-brand-deep),
+      0 14px 28px -12px rgb(0 105 246 / 0.7);
+
+    &:active {
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.2),
+        0 1px 0 var(--color-brand-deep),
+        0 8px 18px -10px rgb(0 105 246 / 0.6);
+    }
+  }
+
+  /* Process numbers and icon circles as glossy orbs */
+  .orb {
+    background-image:
+      radial-gradient(circle at 32% 26%, rgb(255 255 255 / 0.38), transparent 38%),
+      radial-gradient(circle at 70% 85%, rgb(0 0 0 / 0.22), transparent 60%);
+    box-shadow: 0 12px 22px -10px rgb(11 30 63 / 0.45);
+  }
+
+  /* Raised slab: a white panel with a few pixels of visible edge below it and a soft shadow.
+     The outline is part of the shadow, so do not add ring utilities to a slab. */
+  .slab {
+    background-color: var(--color-panel);
+    box-shadow:
+      inset 0 1px 0 #fff,
+      0 0 0 1px var(--slab-edge, var(--color-line)),
+      0 2px 0 1px #e1e9f5,
+      0 4px 0 1px #d5dfef,
+      0 6px 0 1px #c9d5ea,
+      0 22px 34px -14px rgb(11 30 63 / 0.22),
+      var(--slab-glow, 0 0 #0000);
+    transition:
+      transform 450ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 450ms ease;
+  }
+
+  .slab-blue {
+    --slab-edge: var(--color-brand);
+  }
+
+  /* A smaller slab for pills and chips */
+  .slab-pill {
+    background-color: var(--color-panel);
+    box-shadow:
+      inset 0 1px 0 #fff,
+      0 0 0 1px var(--color-line),
+      0 3px 0 1px #c9d5ea,
+      0 10px 18px -8px rgb(3 20 60 / 0.35);
+  }
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
